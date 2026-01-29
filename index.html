@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>iCore Messenger</title>
+  <link rel="icon" href="/favicon.png" type="image/png">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --background: #09090b;
+      --foreground: #fafafa;
+      --card: #18181b;
+      --muted-foreground: #a1a1aa;
+      --border: #27272a;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background-color: var(--background);
+      color: var(--foreground);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* Header */
+    header {
+      width: 100%;
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo-img {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+
+    .logo-text {
+      font-weight: 500;
+    }
+
+    .github-link {
+      color: var(--muted-foreground);
+      transition: color 0.2s;
+    }
+
+    .github-link:hover {
+      color: var(--foreground);
+    }
+
+    .github-link svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    /* Main */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      padding-bottom: 5rem;
+    }
+
+    /* Floating Icons Container */
+    .icons-container {
+      position: relative;
+      width: 256px;
+      height: 256px;
+      margin-bottom: 2rem;
+    }
+
+    .floating-icon {
+      position: absolute;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .floating-icon.delayed {
+      animation: float-delayed 3s ease-in-out infinite;
+    }
+
+    .icon-top { top: 0; left: 50%; transform: translateX(-50%); }
+    .icon-top-right { top: 32px; right: 16px; animation-delay: 0.5s; }
+    .icon-right { top: 50%; right: 0; transform: translateY(-50%); animation-delay: 1s; }
+    .icon-bottom-right { bottom: 32px; right: 16px; animation-delay: 1.5s; }
+    .icon-bottom { bottom: 0; left: 50%; transform: translateX(-50%); animation-delay: 2s; }
+    .icon-bottom-left { bottom: 32px; left: 16px; animation-delay: 2.5s; }
+    .icon-left { top: 50%; left: 0; transform: translateY(-50%); animation-delay: 3s; }
+    .icon-top-left { top: 32px; left: 16px; animation-delay: 3.5s; }
+
+    .center-logo {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .center-logo-img {
+      width: 80px;
+      height: 80px;
+      border-radius: 16px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      animation: pulse-glow 2s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    @keyframes float-delayed {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
+      50% { box-shadow: 0 25px 50px -12px rgba(255, 255, 255, 0.1); }
+    }
+
+    /* Brand */
+    h1 {
+      font-size: 3rem;
+      font-weight: 300;
+      letter-spacing: -0.025em;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    @media (min-width: 768px) {
+      h1 { font-size: 3.75rem; }
+    }
+
+    /* Sign In Button */
+    .sign-in-btn {
+      padding: 0.75rem 2rem;
+      border-radius: 9999px;
+      background-color: var(--foreground);
+      color: var(--background);
+      font-weight: 500;
+      font-size: 0.875rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-bottom: 2rem;
+    }
+
+    .sign-in-btn:hover {
+      opacity: 0.9;
+      transform: scale(1.05);
+    }
+
+    /* Tagline */
+    .tagline {
+      font-size: 1.25rem;
+      color: var(--muted-foreground);
+      text-align: center;
+      max-width: 400px;
+      line-height: 1.6;
+    }
+
+    @media (min-width: 768px) {
+      .tagline { font-size: 1.5rem; }
+    }
+
+    /* Features Section */
+    section {
+      width: 100%;
+      padding: 1rem;
+      padding-bottom: 4rem;
+    }
+
+    .features-container {
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .safety-card {
+      background-color: var(--card);
+      border-radius: 16px;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .safety-icon {
+      margin-bottom: 1rem;
+    }
+
+    .safety-title {
+      font-weight: 600;
+      font-size: 1.25rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .safety-desc {
+      color: var(--muted-foreground);
+      font-size: 0.875rem;
+      line-height: 1.6;
+    }
+
+    /* Footer */
+    footer {
+      width: 100%;
+      padding: 2rem 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-content {
+      max-width: 1024px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    @media (min-width: 768px) {
+      .footer-content {
+        flex-direction: row;
+        justify-content: space-between;
+      }
+    }
+
+    .footer-copy {
+      color: var(--muted-foreground);
+      font-size: 0.875rem;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .footer-links a {
+      color: var(--muted-foreground);
+      font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover {
+      color: var(--foreground);
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="logo-section">
+    <img src="https://i.ibb.co/pjFqvDDh/0dde5293d078.jpg" alt="iCore Logo" class="logo-img">
+      <span class="logo-text">iCore</span>
+    </div>
+    <a href="https://github.com/Codehunterxs/icore-messenger-ui" target="_blank" rel="noopener noreferrer" class="github-link">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+    </a>
+  </header>
+
+  <!-- Main -->
+  <main>
+    <div class="icons-container">
+      <!-- Floating Icons (simplified as colored circles) -->
+      <div class="floating-icon icon-top">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14" height="48" width="48"><path fill="url(#inboxFav)" fill-rule="evenodd" d="M12.2914 2.7413c.1112.83789.2086 1.71915.2086 2.62506 0 .57043-.039 1.13084-.0951 1.67668-.8526-1.61386-3.12538-1.61346-3.97863-.00203-.11382.21495-.2145.43485-.30333.66029-.2116.01707-.42211.04288-.6321.07809-1.42324.23865-2.2366 1.68403-1.79874 2.94641-.85264-.0208-1.68689-.0854-2.49385-.1586l-.00236-.0003c-.74025-.0707-1.44168-.3523-1.98665-.81231C.662979 9.29345.301856 8.67513.20883 7.99326l-.000248-.00185C.0974471 7.15353 0 6.27226 0 5.36636c0-.90592.097452-1.78643.208574-2.625l.000256-.0019c.018495-.13557.047588-.26863.086626-.39844C1.56561 3.54683 2.89723 4.67344 4.35546 5.67859c1.14254.78754 2.64661.78752 3.78914-.00002 1.4582-1.00515 2.7898-2.13174 4.0599-3.33753.0391.1298.0682.26285.0867.39842l.0002.00184ZM5.06487 4.64939C3.5929 3.63478 2.24493 2.48283.942986 1.23086c.082934-.08862.171824-.17303.266254-.252738.54497-.460056 1.2464-.741624 1.98665-.812346l.00236-.00022C4.18042.0764115 5.2021 0 6.25 0c1.0479 0 2.07048.0764094 3.0518.16556l.00231.00021c.74029.070722 1.44169.352297 1.98669.812352.0944.079718.1833.164128.2662.252748-1.3019 1.25196-2.64988 2.40389-4.12183 3.41851-.7154.49313-1.65489.49314-2.3703.00001Zm6.23443 2.9805c.2114.40026.3706.83014.4878 1.3041.4664-.01661.9105.0089 1.3445.08167.8232.13803 1.1587 1.09924.5741 1.69494-.3086.3145-.6613.589-1.0697.8358.1531.4179.2595.8302.3231 1.2471.1289.8455-.7053 1.4773-1.4677 1.0897-.3761-.1912-.7315-.4295-1.0777-.7222-.346.2925-.70071.5306-1.07616.7218-.76215.388-1.5965-.2438-1.46754-1.0893.06359-.4169.16999-.8292.32313-1.2471-.40847-.2468-.76111-.5213-1.06975-.8358-.58462-.5957-.24908-1.55691.57411-1.69494.43396-.07277.8781-.09828 1.34447-.08167.11727-.47415.27693-.90418.48893-1.30456.3839-.72503 1.38511-.72492 1.76841.00046Z" clip-rule="evenodd"/><defs><linearGradient id="inboxFav" x1="15.213" x2="-3.671" y1="16.965" y2="3.551" gradientUnits="userSpaceOnUse"><stop stop-color="#ffd600"/><stop offset="1" stop-color="#ff007a"/></linearGradient></defs></svg>
+      </div>
+      <div class="floating-icon delayed icon-top-right">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14" height="44" width="44"><path fill="url(#phoneNotif)" fill-rule="evenodd" d="M8.67699.755118C9.16048.271624 9.81624 0 10.5 0c.6838 0 1.3395.271625 1.823.755118.4835.483492.7551 1.139252.7551 1.823022 0 .76307.268 1.5019.7572 2.08753l.0484.05792c.1245.14897.1515.35652.0692.53236-.0822.17584-.2588.28819-.4529.28819h-2.3501v.45018c0 .41422-.3358.75-.75.75-.41421 0-.75-.33578-.75-.75v-.45018H7.50001c-.19412 0-.3707-.11235-.45293-.28819-.08223-.17584-.05525-.38339.0692-.53236l.04839-.05792c.4892-.58563.7572-1.32446.7572-2.08753 0-.68377.27162-1.33953.75512-1.823022ZM3.59863 10.7251c0-.4142.33579-.75.75-.75h1.80333c.41421 0 .75.3358.75.75s-.33579.75-.75.75H4.34863c-.41421 0-.75-.3358-.75-.75Zm-.49114-9.13124c1.31006-.10054 2.29832-.1201 3.57566-.05969.41375.01956.76502-.29999.78459-.71374C7.4873.406679 7.16775.0554059 6.754.0358397c-1.34449-.0635802-2.39497-.0424365-3.76128.062421C1.41642.219233.28728 1.56914.166022 3.09702c-.2213628 2.7892-.2213625 5.01677 0 7.80598.121259 1.5279 1.250398 2.8778 2.826698 2.9987 1.70714.1311 2.80742.1311 4.51456 0 1.5763-.1209 2.70542-1.4708 2.82672-2.9987.0842-1.06121.137-1.87266.1569-2.93658.0078-.41414-.3216-.75616-.73578-.76392-.41414-.00775-.75615.32169-.76391.73583-.01913 1.02138-.06948 1.79946-.15253 2.84597-.07268.9157-.7239 1.5664-1.44618 1.6218-1.63073.1252-2.65426.1252-4.285 0-.72228-.0554-1.3735-.7061-1.44618-1.6218-.21509-2.7102-.21509-4.8584 0-7.56861.07268-.91572.7239-1.5664 1.44617-1.62183Z" clip-rule="evenodd"/><defs><linearGradient id="phoneNotif" x1="15.213" x2="-3.671" y1="16.965" y2="3.551" gradientUnits="userSpaceOnUse"><stop stop-color="#ffd600"/><stop offset="1" stop-color="#ff007a"/></linearGradient></defs></svg>
+      </div>
+      <div class="floating-icon icon-right">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14" height="40" width="40"><path fill="url(#cloud)" fill-rule="evenodd" d="M4.69402 2.22727C5.40069 1.73692 6.29194 1.5 7.3154 1.5c1.24864 0 2.29924.35352 3.0538 1.08188.663.64005 1.0494 1.52309 1.1735 2.57964.6801.08993 1.2627.35931 1.6949.82499.5217.5622.7624 1.34402.7624 2.25109 0 1.01876-.3141 1.8243-.8379 2.4431-.5162.6097-1.2093 1.0072-1.9241 1.2694-1.41841.5202-3.04493.5499-3.9226.5499-.88168 0-2.66341-.0384-4.23772-.6149-.79191-.29-1.56275-.7271-2.137938-1.393C.356212 9.81657 0 8.93483 0 7.81422c0-1.15433.310968-2.12848.967634-2.81591.586356-.61382 1.395876-.94421 2.354026-1.01024.48763.05424.9563.24048 1.35712.50289.48626.31835.82495.7171.97247 1.04673.141.31507.51071.45618.82578.31518.31507-.141.45618-.51072.31518-.82578-.26604-.59448-.78964-1.16352-1.42875-1.58194-.39531-.2588-.85281-.47191-1.34914-.59823.19699-.23459.42368-.442.6797-.61965Z" clip-rule="evenodd"/><defs><linearGradient id="cloud" x1=".538" x2="14.42" y1="2.389" y2="12.347" gradientUnits="userSpaceOnUse"><stop stop-color="#00d078"/><stop offset="1" stop-color="#007df0"/></linearGradient></defs></svg>
+      </div>
+      <div class="floating-icon delayed icon-bottom-right">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14" height="44" width="44"><path fill="url(#warranty)" fill-rule="evenodd" d="M5.99101.3699c.57445-.493437 1.42227-.493095 1.99644.000396.21134.181644.41981.363449.6257.545701.27393-.055845.54981-.109905.82803-.162283.74422-.140103 1.47832.284106 1.72882.998566.0922.26297.1818.52466.269.78544.2651.08859.5311.17971.7982.27346.7145.25077 1.1382.98518.9979 1.72917-.0528.2799-.1072.55729-.1634.83259.1864.21041.3723.42351.558.63961.4935.57417.4938 1.42199.0004 1.99644-.1845.2148-.3693.42674-.5547.63608.0549.26941.1081.54084.1598.81467.1403.74396-.2834 1.47836-.9979 1.72916-.2672.0938-.5332.1849-.7984.2735-.0872.2608-.1768.5225-.269.7854-.2505.7145-.9846 1.1387-1.72881.9986-.27211-.0513-.54198-.1041-.80996-.1586-.20481.1812-.4121.3619-.62214.5423-.57445.4934-1.42228.4931-1.99644-.0004-.21132-.1816-.41977-.3634-.62564-.5456-.27398.0558-.54992.1099-.8282.1623-.74421.1401-1.47828-.2841-1.72877-.9986-.0922-.2629-.18183-.5246-.269-.7854-.26521-.0886-.53122-.1797-.79843-.2735-.71455-.2508-1.138165-.9852-.997872-1.72916.052802-.28002.107248-.55752.16345-.83293-.186302-.21033-.372131-.42335-.557792-.63936-.49349-.57417-.493833-1.42199-.000397-1.99644.184475-.21476.369237-.42666.554563-.63596-.054886-.26942-.108096-.54086-.159733-.8147-.140291-.74399.283321-1.4784.997881-1.72917.26713-.09375.53307-.18487.79821-.27346.08718-.26078.17682-.52247.26903-.78544.25049-.71446.98456-1.13867 1.72877-.998566.27216.051236.54208.104082.81011.158633.20486-.181263.4122-.361993.62228-.542447Zm3.5129 5.1856c.30679-.2783.32989-.75261.05159-1.0594-.27831-.3068-.75262-.32989-1.05941-.05159-.73553.66723-1.29599 1.27407-1.77043 2.01459-.29702.4636-.55225.96703-.79644 1.55179l-.77117-.79526c-.28835-.29737-.76317-.30467-1.06053-.01632-.29736.28836-.30467.76317-.01632 1.06054l1.59287 1.64264c.18115.18681.44618.26641.70027.21021.25409-.0561.46091-.23999.54646-.48575.36572-1.05054.68641-1.76325 1.06788-2.35866.3785-.59078.83702-1.09756 1.51523-1.71279Z" clip-rule="evenodd"/><defs><linearGradient id="warranty" x1="15.213" x2="-3.671" y1="16.965" y2="3.551" gradientUnits="userSpaceOnUse"><stop stop-color="#ffd600"/><stop offset="1" stop-color="#ff007a"/></linearGradient></defs></svg>
+      </div>
+      <div class="floating-icon icon-bottom">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14" height="48" width="48"><path fill="url(#stickyNote)" fill-rule="evenodd" d="M3.65722.475271C4.731.354654 5.85134.25 7 .25c1.14874 0 2.26826.105692 3.3418.224162l.0025.000281c.8156.09423 1.5752.462154 2.1549 1.043777.5798.58163.9456 1.34265 1.0376 2.15897l.0004.00282c.1145 1.0696.2128 2.18353.2128 3.32448 0 .18139-.0025.36201-.0071.54179h-3.5567c-.86524 0-1.5233.66263-1.66304 1.43665-.33782 1.87117-1.285 3.64437-2.11795 4.76707-.94072-.0278-1.85958-.1166-2.74794-.2163l-.00162-.0002c-.81554-.0942-1.57512-.4621-2.15489-1.0437-.579765-.5817-.945514-1.3427-1.037604-2.159l-.000313-.0028C.348315 9.25939.25 8.14645.25 7.00449c0-1.14195.09832-2.25587.212856-3.32357l.000292-.00273c.09209-.81632.457847-1.57734 1.037612-2.15896C2.08053.937597 2.84011.569674 3.65565.47545l.00157-.000179ZM7.96172 13.683c2.20298-.4073 4.89528-2.0128 5.63538-4.88672h-3.4109c-.1835 0-.38633.15063-.43292.40873-.3051 1.68989-1.03976 3.27819-1.79156 4.47799Z" clip-rule="evenodd"/><defs><linearGradient id="stickyNote" x1="14.92" x2="-3.29" y1="16.609" y2="3.674" gradientUnits="userSpaceOnUse"><stop stop-color="#ffd600"/><stop offset="1" stop-color="#ff007a"/></linearGradient></defs></svg>
+      </div>
+      <div class="floating-icon delayed icon-bottom-left">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14" height="44" width="44"><path fill="url(#magnify)" fill-rule="evenodd" d="M3.00019 3.00019C2.21765 3.78273 1.75 4.9823 1.75 6.6533c0 1.67101.46765 2.87057 1.25019 3.6531.78254.7826 1.98211 1.2502 3.65311 1.2502 1.67101 0 2.87057-.4676 3.6531-1.2502.7826-.78253 1.2502-1.98209 1.2502-3.6531 0-1.671-.4676-2.87057-1.2502-3.65311C9.52387 2.21765 8.32431 1.75 6.6533 1.75c-1.671 0-2.87057.46765-3.65311 1.25019ZM1.93953 1.93953C3.07911.799945 4.70619.25 6.6533.25c1.94711 0 3.5742.549945 4.7138 1.68953 1.1396 1.13958 1.6895 2.76666 1.6895 4.71377 0 1.54028-.3441 2.88029-1.0521 3.9371l1.4526 1.4525c.3905.3905.3905 1.0237 0 1.4142-.3905.3906-1.0237.3906-1.4142 0l-1.4526-1.4525c-1.05683.7079-2.39679 1.052-3.937 1.052-1.94711 0-3.57419-.5499-4.71377-1.6895C.799945 10.2275.25 8.60041.25 6.6533s.549945-3.57419 1.68953-4.71377Z" clip-rule="evenodd"/><defs><linearGradient id="magnify" x1="2.457" x2="13.36" y1="2.846" y2="8.887" gradientUnits="userSpaceOnUse"><stop stop-color="#ffd600"/><stop offset="1" stop-color="#00d078"/></linearGradient></defs></svg>
+      </div>
+      <div class="floating-icon icon-left">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14" height="40" width="40"><path fill="url(#signAt)" fill-rule="evenodd" d="M1.74951 7.00008c0-1.78205.49888-3.06837 1.34042-3.90991.84153-.84153 2.12786-1.34041 3.90991-1.34041s3.06836.49888 3.90996 1.34041c.8415.84154 1.3404 2.12786 1.3404 3.90991 0 .64469-.1207 1.20229-.3184 1.56932-.1858.34497-.3878.45056-.6117.45056-.3599 0-.5122-.08501-.5763-.1367-.066-.0533-.1311-.14611-.1772-.33241-.0481-.19404-.062-.43453-.0593-.72121.0008-.07959.0035-.17504.0064-.27615.0055-.19347.0116-.40769.0058-.57116-.0034-1.01713-.2942-1.91664-.93985-2.56228-.6494-.6494-1.55562-.93984-2.58004-.93984-1.02441 0-1.93063.29044-2.58004.93984-.6494.6494-.93983 1.55563-.93983 2.58004 0 1.02441.29043 1.93064.93983 2.58004.64941.64937 1.55563.93987 2.58004.93987.96374 0 1.82287-.2571 2.46197-.82823.09274.12809.20486.24959.34047.35903.40095.3234.91785.4692 1.51805.4692.9281 0 1.5661-.55934 1.9324-1.2393.3543-.65788.4977-1.48522.4977-2.28062 0-2.05815-.5812-3.77199-1.7798-4.97057C10.7718.830933 9.058.249756 6.99984.249756S3.22785.830933 2.02927 2.02951C.830689 3.22809.249512 4.94193.249512 7.00008c0 2.05816.581177 3.77202 1.779758 4.97062 1.19858 1.1985 2.91241 1.7797 4.97057 1.7797.86955 0 1.67629-.1032 2.41001-.3134.39819-.1141.62855-.5294.51441-.9276-.11409-.3982-.52937-.6285-.92756-.5144-.57939.166-1.24461.2554-1.99686.2554-1.78205 0-3.06838-.4989-3.90991-1.3404-.84154-.8415-1.34042-2.12786-1.34042-3.90992Zm3.23023.00001c0-.74831.20814-1.22702.50049-1.51938.29236-.29236.77108-.5005 1.51938-.5005.74831 0 1.22703.20814 1.51938.5005.29236.29236.5005.77107.5005 1.51938 0 .74831-.20814 1.22702-.5005 1.51938-.29235.29235-.77107.5005-1.51938.5005-.7483 0-1.22702-.20815-1.51938-.5005-.29235-.29236-.50049-.77107-.50049-1.51938Z" clip-rule="evenodd"/><defs><linearGradient id="signAt" x1="2.456" x2="13.361" y1="2.846" y2="8.888" gradientUnits="userSpaceOnUse"><stop stop-color="#ffd600"/><stop offset="1" stop-color="#00d078"/></linearGradient></defs></svg>
+      </div>
+      <div class="floating-icon delayed icon-top-left">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14" height="44" width="44"><path fill="url(#cog)" fill-rule="evenodd" d="M6.591.0000066757C6.28929.000389427 5.99383.0911818 5.74434.260876c-.2492.169501-.44175.409982-.55213.690456l-.00042.00107-.37713.948998-1.15881.6671-1.01644-.15413c-.29876-.04483-.60501.00085-.87743.13146-.27234.13058-.49922.34-.65066.60135l-.40882.70354c-.15185.26131-.22104.56237-.198246.86376.022787.30129.136398.58844.325585.82399l.641651.79948v1.32411l-.641482.79928c-.189187.23555-.302967.5229-.325754.8242-.022794.30139.046392.60244.198242.86376l.408634.7032c.15143.2614.37848.4711.65085.6017.27242.1306.57791.1764.87667.1316l1.02013-.1543 1.15559.6634.37555.9527c.11034.2808.30316.5219.55256.6915.24948.1697.54431.2605.84601.2609h.81865c.3017-.0004.59653-.0912.84601-.2609.2494-.1696.44222-.4107.55256-.6915l.37555-.9528 1.15554-.6633 1.0202.1542c.2987.0449.6042-.0009.8767-.1315.2723-.1306.4994-.3403.6508-.6017l.4086-.7032c.1519-.26133.2211-.56238.1983-.86377-.0228-.3013-.1366-.58865-.3258-.8242l-.6415-.79928v-1.3241l.6417-.79949c.1892-.23555.3028-.52269.3256-.82399.0228-.30139-.0464-.60245-.1983-.86376l-.4088-.70354c-.1514-.26135-.3783-.47077-.6506-.60135-.2725-.13061-.5787-.17629-.8775-.13146l-1.0164.15413-1.15883-.66709-.37713-.949004-.00042-.001071C8.69304.670851 8.50049.430371 8.25129.260869 8.0018.0911751 7.70634.000382751 7.40463 0l-.40681.0000068843-.40682-2.086e-7ZM5.28484 5.2868c.41242-.41242 1.00266-.61297 1.71297-.61297.71032 0 1.30056.20055 1.71297.61297.41242.41241.61297 1.00265.61297 1.71297 0 .71031-.20055 1.30055-.61297 1.71297-.41241.41241-1.00265.61296-1.71297.61296-.71031 0-1.30055-.20055-1.71297-.61296-.41241-.41242-.61296-1.00266-.61296-1.71297 0-.71032.20055-1.30056.61296-1.71297Z" clip-rule="evenodd"/><defs><linearGradient id="cog" x1="2.624" x2="13.473" y1="2.692" y2="8.272" gradientUnits="userSpaceOnUse"><stop stop-color="#ffd600"/><stop offset="1" stop-color="#00d078"/></linearGradient></defs></svg>
+      </div>
+
+      <!-- Center Logo -->
+      <div class="center-logo">
+        <img src="https://i.ibb.co/pjFqvDDh/0dde5293d078.jpg" alt="iCore Logo" class="logo-img">
+      </div>
+    </div>
+
+    <h1>iCore Messenger</h1>
+
+    <button class="sign-in-btn" onclick="window.location.href='https://i.co4e.pw'">
+      Sign In
+    </button>
+
+    <p class="tagline">
+      The best place for all your<br>
+      messages, photos, files, notes<br>
+      and more.
+    </p>
+  </main>
+
+  <!-- Features Section -->
+  <section>
+    <div class="features-container">
+      <div class="safety-card">
+        <div class="safety-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14" height="56" width="56">
+            <path fill="#d7e0ff" d="M0.959867 10.2685C1.114 11.7092 2.2727 12.8679 3.71266 13.0284 4.78221 13.1476 5.88037 13.25 7 13.25s2.21779 -0.1024 3.2873 -0.2216c1.44 -0.1605 2.5987 -1.3192 2.7528 -2.7599 0.1138 -1.06348 0.2099 -2.15534 0.2099 -3.2685 0 -1.11316 -0.0961 -2.20502 -0.2099 -3.26853 -0.1541 -1.44065 -1.3128 -2.59936 -2.7528 -2.759861C9.21779 0.852392 8.11963 0.75 7 0.75S4.78221 0.852393 3.71266 0.971609C2.2727 1.13211 1.114 2.29082 0.959867 3.73147 0.846083 4.79498 0.75 5.88684 0.75 7c0 1.11316 0.096084 2.20502 0.209867 3.2685Z" stroke-width="1"></path>
+            <path stroke="#4147d5" stroke-linecap="round" stroke-linejoin="round" d="M4 3.98828v1" stroke-width="1"></path>
+            <path stroke="#4147d5" stroke-linecap="round" stroke-linejoin="round" d="M10 3.98828v1" stroke-width="1"></path>
+            <path stroke="#4147d5" stroke-linecap="round" stroke-linejoin="round" d="M7 5.48828v1.25c0 0.55229 -0.44772 1 -1 1h-0.5" stroke-width="1"></path>
+            <path stroke="#4147d5" stroke-linecap="round" stroke-linejoin="round" d="M5.286 10.3021c0.46252 0.4393 1.07608 0.6843 1.714 0.6843s1.25148 -0.245 1.714 -0.6843" stroke-width="1"></path>
+            <path stroke="#4147d5" stroke-linecap="round" stroke-linejoin="round" d="M10.0135 0.929871c0.3709 0.039947 0.7384 0.082769 1.1022 0.124939 0.9595 0.11121 1.7251 0.8763 1.8329 1.83618 0.0406 0.36154 0.0815 0.72668 0.1196 1.09511" stroke-width="1"></path>
+            <path stroke="#4147d5" stroke-linecap="round" stroke-linejoin="round" d="M10.0135 13.0445c0.3709 -0.04 0.7384 -0.0828 1.1022 -0.1249 0.9595 -0.1113 1.7251 -0.8763 1.8329 -1.8362 0.0406 -0.3616 0.0815 -0.7267 0.1196 -1.09514" stroke-width="1"></path>
+            <path stroke="#4147d5" stroke-linecap="round" stroke-linejoin="round" d="M4 0.929871c-0.37085 0.039947 -0.73836 0.082769 -1.10224 0.124939 -0.95949 0.11121 -1.72509 0.8763 -1.83285 1.83618 -0.04059 0.36154 -0.081517 0.72668 -0.119558 1.09511" stroke-width="1"></path>
+            <path stroke="#4147d5" stroke-linecap="round" stroke-linejoin="round" d="M4 13.0445c-0.37085 -0.04 -0.73836 -0.0828 -1.10224 -0.1249 -0.95949 -0.1113 -1.72509 -0.8763 -1.83285 -1.8362 -0.04059 -0.3616 -0.081517 -0.7267 -0.119558 -1.09514" stroke-width="1"></path>
+          </svg>
+        </div>
+        <p class="safety-title">Unlimited Safety</p>
+        <p class="safety-desc">No bans • No restrictions • No limitations</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <p class="footer-copy">© 2025 iCore Messenger. All rights reserved.</p>
+      <div class="footer-links">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Support</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>i
